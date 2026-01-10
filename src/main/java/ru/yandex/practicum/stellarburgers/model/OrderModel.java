@@ -1,26 +1,24 @@
 package ru.yandex.practicum.stellarburgers.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class OrderModel {
-    private ArrayList<String> ingredients;
-    private String wrongIngredients;
+    private List<String> ingredients;
 
-    public ArrayList<String> getIngredients() {
+    public OrderModel() {
+    }
+
+    public OrderModel(List<String> ingredients) {
+        this.ingredients = ingredients;
+    }
+
+    public List<String> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(ArrayList<String> ingredients) {
+    public void setIngredients(List<String> ingredients) {
         this.ingredients = ingredients;
-    }
-    public String getWrongIngredients() {
-        return wrongIngredients;
-    }
-    public void setWrongIngredients(String wrongIngredients) {
-        this.wrongIngredients = wrongIngredients;
     }
 }

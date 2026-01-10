@@ -19,7 +19,7 @@ public class UserSteps {
                 .then();
     }
 
-    @Step//("User Login")
+    @Step ("User Login")
     public static ValidatableResponse loginUser(UserModel user){
         return given()
                 .body(user)

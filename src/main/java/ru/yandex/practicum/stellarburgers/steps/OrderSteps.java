@@ -1,36 +1,34 @@
 package ru.yandex.practicum.stellarburgers.steps;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import io.qameta.allure.Step;
 import io.restassured.response.ValidatableResponse;
+import ru.yandex.practicum.stellarburgers.model.OrderModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
 public class OrderSteps {
     public static String CREATE_ORDER_ENDPOINT = "/api/orders";
+    OrderModel order = new OrderModel();
 
     @Step("Создание заказа с ингридиентами с авторизацией")
-    public static ValidatableResponse createOrderWithAuth(List<String> ingredients, String accessToken) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-
+    public ValidatableResponse createOrderWithAuth(List<String> ingredientsId, String accessToken) throws JsonProcessingException {
+        order.setIngredients(ingredientsId);
         return given()
                 .header("Authorization", accessToken)
-                .body("{\"ingredients\": " + mapper.writeValueAsString(ingredients)+"}")
+                .body(order)
                 .when()
                 .post(CREATE_ORDER_ENDPOINT)
                 .then();
     }
 
     @Step("Создание заказа с ингридиентами без авторизации")
-    public ValidatableResponse createOrderWithoutAuth(ArrayList<String> ingredients){
+    public ValidatableResponse createOrderWithoutAuth(List<String> ingredientsId){
+        order.setIngredients(ingredientsId);
         return given()
-                .body("{\"ingredients\": [\"" + String.join("\", \"", ingredients) + "\"]}")
+                .body(order)
                 .when()
                 .post(CREATE_ORDER_ENDPOINT)
                 .then();
@@ -46,10 +44,11 @@ public class OrderSteps {
     }
 
     @Step("Создание заказа с авторизацией с неверным хешем ингредиентов")
-    public ValidatableResponse createOrderWithAuthIncorrectIngredients(String wrongIngredients, String accessToken) throws JsonProcessingException {
+    public ValidatableResponse createOrderWithAuthIncorrectIngredients(List<String> wrongIngredientsId, String accessToken) throws JsonProcessingException {
+        order.setIngredients(wrongIngredientsId);
         return given()
                 .header("Authorization", accessToken)
-                .body(wrongIngredients)
+                .body(order)
                 .when()
                 .post(CREATE_ORDER_ENDPOINT)
                 .then();
